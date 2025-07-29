@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - ${DATABASE_PORT}:5432
+    volumes:
+      - prod_postgres_data:/var/lib/postgresql/data
+    networks:
+      - default_network
+
+  backend:
+    build:
+      context: ./backend
+      target: prod
+    container_name: backend
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: ${DATABASE_PROTO}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+      DJANGO_DEBUG: false
+    volumes:
+      - static_files:/static
+    depends_on:
+      - postgres
+    networks:
+      - default_network
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - static_files:/static:ro
+    networks:
+      - default_network
+    environment:
+      - DAYS_VALID=30
+      - DOMAIN=${DOMAIN:-localhost}
+
+volumes:
+  prod_postgres_data:
+    external: true
+  static_files:
+
+networks:
+  default_network:

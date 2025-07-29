@@ -1,0 +1,19 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    environment:
+      DJANGO_DEBUG: true
+    ports:
+      - "127.0.0.1:5678:5678"
+    volumes:
+      - ./backend:/app:ro
+      - empty:/app/.venv
+      - dev_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  empty:
+    driver: local
+  dev_postgres_data:
+    external: true
