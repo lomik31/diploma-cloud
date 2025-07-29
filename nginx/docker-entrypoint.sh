@@ -11,8 +11,8 @@ mkdir -p "$CERT_DIR"
 
 
 if [ ! -f "$CERT" ] || [ ! -f "$KEY" ]; then
-CN=${DOMAINS%%,*}
-SAN="subjectAltName=DNS:$(echo "$DOMAINS" | sed 's/,/,DNS:/g')"
+   CN=${DOMAINS%%,*}
+   SAN="subjectAltName=DNS:$(echo "$DOMAINS" | sed 's/,/,DNS:/g')"
 
    echo "⚠️  Сертификаты не найдены — генерирую самоподписанные…"
    openssl req -x509 -nodes -days "$DAYS" -newkey rsa:4096 \
