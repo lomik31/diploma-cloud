@@ -44,6 +44,8 @@ services:
     environment:
       - DAYS_VALID=30
       - DOMAINS=${DOMAINS:-localhost}
+    depends_on:
+      - backend
 
 volumes:
   prod_postgres_data:
