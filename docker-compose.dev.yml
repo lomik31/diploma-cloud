@@ -10,11 +10,12 @@ services:
     volumes:
       - ./backend:/app:ro
       - empty:/app/.venv
-      - dev_postgres_data:/var/lib/postgresql/data
 
   postgres:
     ports:
       - ${DATABASE_PORT}:5432
+    volumes:
+      - dev_postgres_data:/var/lib/postgresql/data
 
 volumes:
   empty:
