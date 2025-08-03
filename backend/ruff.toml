@@ -39,7 +39,7 @@ target-version = "py313"
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
 select = ["ALL"]
-ignore = ["D212", "D10"]
+ignore = ["D212", "D10", "D205", "RUFF002"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
@@ -74,3 +74,7 @@ docstring-code-format = false
 # This only has an effect when the `docstring-code-format` setting is
 # enabled.
 docstring-code-line-length = "dynamic"
+
+[lint.extend-per-file-ignores]
+# Also ignore `E402` in all `__init__.py` files.
+"src/*/migrations/*" = ["ALL"]
