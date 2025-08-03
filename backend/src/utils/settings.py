@@ -34,7 +34,7 @@ ALLOWED_HOSTS = env.list(
 )
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://localhost",
+    "https://*"
 ]
 
 
