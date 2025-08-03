@@ -1,7 +1,9 @@
+import contextlib
+
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 from rest_framework_simplejwt.token_blacklist import models as jwt_models
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from storage.models import File
 
@@ -42,7 +44,5 @@ MODELS_TO_HIDE = [
 ]
 
 for model in MODELS_TO_HIDE:
-    try:
+    with contextlib.suppress(admin.sites.NotRegistered):
         admin.site.unregister(model)
-    except admin.sites.NotRegistered:
-        pass
