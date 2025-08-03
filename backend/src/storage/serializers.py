@@ -15,7 +15,7 @@ class FileSerializer(serializers.ModelSerializer):
 
         extra_kwargs: ClassVar = {
             "content": {"write_only": True},
-            "original_name": {"required": False},
+            "filename": {"required": False},
         }
         fields = (
             "id", "uuid", "filename", "comment",
