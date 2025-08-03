@@ -12,7 +12,7 @@ from .models import User
 
 class FileInline(admin.TabularInline):
     model = File
-    fields = ("filename", "uuid", "public_id", "created")
+    fields = ("filename", "created", "public_id", "human_size", "last_download")
     readonly_fields = fields
     extra = 0
     can_delete = False

@@ -35,10 +35,10 @@ ALLOWED_HOSTS = env.list(
     default=["localhost"],
 )
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://*",
-]
-
+CSRF_TRUSTED_ORIGINS = [f"https://{i}" for i in env.list(
+    "DJANGO_ALOWED_HOSTS",
+    default=["localhost"],
+)]
 
 
 # Application definition
@@ -121,9 +121,6 @@ STORAGES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
