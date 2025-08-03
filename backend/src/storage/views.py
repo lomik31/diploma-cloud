@@ -1,3 +1,77 @@
-from django.shortcuts import render
+from django.db.models import QuerySet
+from django.http import FileResponse, Http404
+from rest_framework import generics, permissions, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import NotAuthenticated
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
+from rest_framework.response import Response
 
-# Create your views here.
+from .models import File
+from .permissions import IsOwnerOrAdmin
+from .serializers import FileSerializer
+
+
+class FileViewSet(viewsets.ModelViewSet):
+    """CRUD для файлов пользователя."""
+
+    serializer_class = FileSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrAdmin)
+
+    # -------- queryset / hooks --------
+
+    def get_queryset(self) -> QuerySet[File]:
+        user = self.request.user
+        if not user or not user.is_authenticated:
+            raise NotAuthenticated
+        return File.objects.all() if user.is_staff else File.objects.filter(owner=user)
+
+    def perform_create(self, serializer: FileSerializer) -> None:
+        upload = self.request.data["content"]
+        serializer.save(
+            owner=self.request.user,
+            filename=upload.name,
+            size=upload.size,
+        )
+
+    # -------- extra actions --------
+
+    @action(detail=True, methods=["get"])
+    def download(
+        self,
+        request: Request,       # noqa: ARG002
+        pk: str | None = None,  # noqa: ARG002
+    ) -> FileResponse:
+        file_obj: File = self.get_object()
+        return FileResponse(
+            file_obj.content.open("rb"),
+            as_attachment=True,
+            filename=file_obj.filename,
+        )
+
+    @action(detail=True, methods=["post"])
+    def share(
+        self,
+        request: Request,       # noqa: ARG002
+        pk: str | None = None,  # noqa: ARG002
+    ) -> Response:
+        file_obj: File = self.get_object()
+        link: str = file_obj.generate_share_link()
+        return Response({"share_url": link})
+
+
+class PublicDownloadView(generics.GenericAPIView):
+    """GET /api/public/<external_id>/download/."""
+
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, _request: Request, public_id: str) -> FileResponse:
+        try:
+            file_obj: File = File.objects.get(public_id=public_id)
+        except File.DoesNotExist as exc:
+            raise Http404 from exc
+        return FileResponse(
+            file_obj.content.open("rb"),
+            as_attachment=True,
+            filename=file_obj.filename,
+        )
