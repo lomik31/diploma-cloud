@@ -28,9 +28,10 @@ class FileViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer: FileSerializer) -> None:
         upload = self.request.data["content"]
+        filename = self.request.data.get("filename", upload.name)
         serializer.save(
             owner=self.request.user,
-            filename=upload.name,
+            filename=filename,
             size=upload.size,
         )
 
