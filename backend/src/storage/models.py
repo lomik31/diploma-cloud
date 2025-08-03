@@ -5,6 +5,7 @@ import uuid
 from django.contrib.auth import get_user_model
 from django.core.files.storage import storages
 from django.db import models
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -37,4 +38,12 @@ class File(models.Model):
                     self.save(update_fields=["public_id"])
                     break
         return f"/api/public/{self.public_id}/download/"
+
+    def touch_last_download(self) -> None:
+        """Обновляет last_download при скачивании."""
+        self.last_download = timezone.now()
+
+        type(self).objects.filter(pk=self.pk).update(
+            last_download=self.last_download,
+        )
 

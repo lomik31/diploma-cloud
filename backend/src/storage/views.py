@@ -44,6 +44,9 @@ class FileViewSet(viewsets.ModelViewSet):
         pk: str | None = None,  # noqa: ARG002
     ) -> FileResponse:
         file_obj: File = self.get_object()
+
+        file_obj.touch_last_download()
+
         return FileResponse(
             file_obj.content.open("rb"),
             as_attachment=True,
@@ -71,6 +74,9 @@ class PublicDownloadView(generics.GenericAPIView):
             file_obj: File = File.objects.get(public_id=public_id)
         except File.DoesNotExist as exc:
             raise Http404 from exc
+
+        file_obj.touch_last_download()
+
         return FileResponse(
             file_obj.content.open("rb"),
             as_attachment=True,
