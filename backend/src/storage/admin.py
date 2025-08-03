@@ -25,7 +25,7 @@ class FileAdmin(admin.ModelAdmin):
 
     date_hierarchy = "created"
     list_display = (
-        "filename", "uuid", "owner",
+        "filename", "human_size", "owner",
         "created", "public_id", "comment",
         "download_link",
         )
@@ -36,7 +36,7 @@ class FileAdmin(admin.ModelAdmin):
     )
     readonly_fields = (
         "uuid", "public_id", "created",
-        "owner", "size", "download_link",
+        "owner", "human_size", "download_link",
     )
     actions = ("generate_external_link",)
 
@@ -47,6 +47,10 @@ class FileAdmin(admin.ModelAdmin):
     @admin.display(description="Ссылка")
     def download_link(self, obj: File) -> str:
         return admin_download_link(obj)
+
+    @admin.display(description="Size")
+    def human_size(self, obj: File) -> str:
+        return obj.size_hr
 
     @admin.action(description="Создать внешнюю ссылку")
     def generate_external_link(
@@ -64,5 +68,6 @@ class FileAdmin(admin.ModelAdmin):
         if "content" in form.changed_data and form.cleaned_data.get("content"):
             upload = form.cleaned_data["content"]
             obj.filename = Path(upload.name).name
+            obj.size = upload.size
 
         super().save_model(request, obj, form, change)

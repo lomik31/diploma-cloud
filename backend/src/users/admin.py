@@ -18,6 +18,10 @@ class FileInline(admin.TabularInline):
     can_delete = False
     show_change_link = True
 
+    @admin.display(description="Size")
+    def human_size(self, obj: File) -> str:
+        return obj.size_hr
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     ordering = ("-id",)

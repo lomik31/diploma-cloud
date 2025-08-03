@@ -6,11 +6,14 @@ from .models import File
 
 
 class FileSerializer(serializers.ModelSerializer):
+    size_hr = serializers.SerializerMethodField()
+
     class Meta:
         model  = File
         read_only_fields = (
             "uuid", "created", "owner",
-            "last_download", "size", "public_id",
+            "last_download", "size", "size_hr",
+            "public_id",
         )
 
         extra_kwargs: ClassVar = {
@@ -20,5 +23,8 @@ class FileSerializer(serializers.ModelSerializer):
         fields = (
             "id", "uuid", "filename", "comment",
             "created", "content", "size",
-            "public_id", "last_download",
+            "size_hr", "public_id", "last_download",
         )
+
+    def get_size_hr(self, obj: File) -> str:
+        return obj.size_hr

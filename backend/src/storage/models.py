@@ -7,6 +7,8 @@ from django.core.files.storage import storages
 from django.db import models
 from django.utils import timezone
 
+from .utils import binary_size
+
 User = get_user_model()
 
 userfiles_storage = storages["userfiles"]
@@ -27,6 +29,11 @@ class File(models.Model):
 
     def __str__(self) -> str:
         return self.filename
+
+    @property
+    def size_hr(self) -> str:
+        """'Human-readable' размер (KiB, MiB …)."""
+        return binary_size(self.size)
 
     def generate_share_link(self) -> str:
         if not self.public_id:
