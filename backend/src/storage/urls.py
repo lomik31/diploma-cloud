@@ -10,7 +10,7 @@ router.register(r"files", FileViewSet, basename="files")
 
 urlpatterns = [
     path(
-        "public/<uuid:external_id>/download/",
+        "public/<str:public_id>/download/",
         PublicDownloadView.as_view(),
         name="public-download",
     ),
