@@ -3,8 +3,6 @@ import re
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from .models import User
-
 USERNAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9]{3,19}$")
 
 def validate_username(value: str) -> None:
@@ -22,7 +20,7 @@ PASSWORD_RE = re.compile(
 class StrongPasswordValidator:
     """Django-совместимый валидатор пароля."""
 
-    def validate(self, password: str, user: User = None) -> None:  # noqa: ARG002
+    def validate(self, password: str, user: None = None) -> None:  # noqa: ARG002
         if not PASSWORD_RE.fullmatch(password):
             raise ValidationError(
                 _("Пароль ≥6 символов и содержит минимум одну "
