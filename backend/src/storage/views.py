@@ -60,11 +60,11 @@ class FileViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def share(
         self,
-        request: Request,       # noqa: ARG002
+        request: Request,
         pk: str | None = None,  # noqa: ARG002
     ) -> Response:
         file_obj: File = self.get_object()
-        link: str = file_obj.generate_share_link()
+        link: str = f"{request.scheme}://{request.get_host()}{file_obj.generate_share_link()}"
         return Response({"share_url": link})
 
 

@@ -175,3 +175,8 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = "users.User"
 
 AUTH_VALIDATORS = [validate_username]
+
+USE_X_FORWARDED_HOST = True
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
