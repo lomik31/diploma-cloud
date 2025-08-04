@@ -101,7 +101,7 @@ STORAGES = {
     "userfiles": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
         "OPTIONS": {
-            "location": env("STORAGE_LOCATION", default=BASE_DIR / "userfiles"),
+            "location": Path("/") / "userfiles",
             "base_url": "/userfiles/",
         },
     },

@@ -23,6 +23,7 @@ services:
       DJANGO_DEBUG: false
     volumes:
       - static_files:/static
+      - ${STORAGE_LOCATION:-userfiles}:/userfiles
     depends_on:
       - postgres
     networks:
@@ -49,6 +50,8 @@ volumes:
   prod_postgres_data:
     external: true
   static_files:
+  userfiles:
+    external: true
 
 networks:
   default_network:
