@@ -31,7 +31,7 @@ class File(models.Model):
         return self.filename
 
     @property
-    def size_hr(self) -> str:
+    def size_h(self) -> str:
         """'Human-readable' размер (KiB, MiB …)."""
         return binary_size(self.size)
 

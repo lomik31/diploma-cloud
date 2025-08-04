@@ -2,12 +2,12 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenBlacklistView, TokenObtainPairView, TokenRefreshView
 
-from .views import RegistrationAPIView, UserViewSet
+from .views import AdminUserViewSet, RegistrationAPIView
 
 app_name = "users"
 
 router = DefaultRouter()
-router.register(r"admin/users", UserViewSet, basename="admin-users")
+router.register(r"admin/users", AdminUserViewSet, basename="admin-users")
 
 urlpatterns = [
     path("auth/register/",       RegistrationAPIView.as_view(), name="register"),

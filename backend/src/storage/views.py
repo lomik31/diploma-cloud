@@ -22,9 +22,13 @@ class FileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self) -> QuerySet[File]:
         user = self.request.user
+        owner_id = self.request.query_params.get("owner")
         if not user or not user.is_authenticated:
             raise NotAuthenticated
-        return File.objects.all() if user.is_staff else File.objects.filter(owner=user)
+        qs = File.objects.all() if user.is_staff else File.objects.filter(owner=user)
+        if owner_id and user.is_staff:
+            qs = qs.filter(owner__id=owner_id)
+        return qs
 
     def perform_create(self, serializer: FileSerializer) -> None:
         upload = self.request.data["content"]
