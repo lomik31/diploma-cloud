@@ -7,7 +7,7 @@ from .views import AdminUserViewSet, RegistrationAPIView
 app_name = "users"
 
 router = DefaultRouter()
-router.register(r"admin/users", AdminUserViewSet, basename="admin-users")
+router.register(r"users/", AdminUserViewSet, basename="admin-users")
 
 urlpatterns = [
     path("auth/register/",       RegistrationAPIView.as_view(), name="register"),
