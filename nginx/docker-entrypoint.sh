@@ -26,7 +26,7 @@ if [ ! -f "$CERT_FULLCHAIN" ] || [ ! -f "$KEY" ]; then
    else
       echo "🔑  Генерирую новый CA сертификат и ключ."
       openssl req -x509 -nodes -days "$DAYS" -newkey rsa:4096 \
-         -keyout "$CA_CERT" -out "$CA_KEY" \
+         -keyout "$CA_KEY" -out "$CA_CERT" \
          -subj "/CN=MyRootCA"
    fi
 
@@ -41,7 +41,7 @@ if [ ! -f "$CERT_FULLCHAIN" ] || [ ! -f "$KEY" ]; then
 
    rm "${CERT_CSR}" "${CERT}" "${CA_SRL}"
 
-   echo "✅  Готово: $CERT + $KEY"
+   echo "✅  Готово: $CERT_FULLCHAIN + $KEY"
 else
    echo "🔑  Найдены существующие сертификаты — пропускаю генерацию."
 fi
