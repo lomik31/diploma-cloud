@@ -10,6 +10,6 @@ COPY public ./public
 COPY tsconfig*.json ./
 COPY vite.config.ts ./
 
-RUN npm i --omit=dev
+RUN npm i
 
 CMD [ "npm", "run", "build" ]

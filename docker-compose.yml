@@ -21,6 +21,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_PROTO}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
       DJANGO_DEBUG: false
+      DJANGO_ALLOWED_HOSTS: ${DOMAINS:-localhost}
     volumes:
       - static_files:/static
       - ${STORAGE_LOCATION:-userfiles}:/userfiles
