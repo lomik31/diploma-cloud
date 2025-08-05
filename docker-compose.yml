@@ -53,7 +53,7 @@ services:
       - DOMAINS=${DOMAINS:-localhost}
     depends_on:
       - backend
-      - frontend_builder
+      - frontend-builder
 
 volumes:
   prod_postgres_data:
