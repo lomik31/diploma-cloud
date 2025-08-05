@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-CERT_DIR="${CERT_DIR:-/etc/nginx/certs}"
+CERT_DIR="${CERT_DIR}"
 
 KEY="${CERT_DIR}/private.key"
 CERT_FULLCHAIN="${CERT_DIR}/fullchain.crt"
