@@ -40,11 +40,6 @@ CSRF_TRUSTED_ORIGINS = [f"https://{i}" for i in env.list(
     default=["localhost"],
 )]
 
-CORS_ALLOWED_ORIGINS = [f"https://{i}" for i in env.list(
-    "DJANGO_ALOWED_HOSTS",
-    default=["localhost"],
-)]
-
 
 # Application definition
 
@@ -61,13 +56,11 @@ INSTALLED_APPS += [
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
-    "corsheaders",
     "users",
     "storage",
 ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
