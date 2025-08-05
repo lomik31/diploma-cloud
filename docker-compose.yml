@@ -29,6 +29,13 @@ services:
     networks:
       - default_network
 
+  frontend-builder:
+    build:
+      context: ./frontend
+    container_name: frontend_builder
+    volumes:
+      - frontend:/app/dist
+
   nginx:
     build:
       context: ./nginx
@@ -38,6 +45,7 @@ services:
       - 443:443
     volumes:
       - static_files:/static:ro
+      - frontend:/frontend:ro
     networks:
       - default_network
     environment:
@@ -45,6 +53,7 @@ services:
       - DOMAINS=${DOMAINS:-localhost}
     depends_on:
       - backend
+      - frontend_builder
 
 volumes:
   prod_postgres_data:
@@ -52,6 +61,7 @@ volumes:
   static_files:
   userfiles:
     external: true
+  frontend:
 
 networks:
   default_network:
