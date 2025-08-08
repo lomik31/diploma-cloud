@@ -4,6 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { downloadFile, shareFile, deleteFile, type FileMeta} from "../../api/files";
 import { useToast } from "../../context/ToastContextHelpers";
 
+import "./FileItem.css";
+
 
 function FileItem({ file }: { file: FileMeta }) {
     const toast = useToast();
