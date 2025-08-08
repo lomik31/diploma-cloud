@@ -1,0 +1,10 @@
+/* Только каркас страницы; все компонентные стили вынесены */
+.fs-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f8fafc;
+    color: #0f172a;
+}
+.fs-content { padding: 24px 20px; flex: 1; }
+.fs-hint { opacity: .7; }

@@ -1,0 +1,14 @@
+.adminbtn {
+    width: 36px;
+    height: 36px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid #1a2234;
+    background: transparent;
+    color: #c8d5ec;
+    cursor: pointer;
+    text-decoration: none;
+}
+.adminbtn:hover { background: #121a2a; }
+.adminbtn__icon { width: 18px; height: 18px; }
