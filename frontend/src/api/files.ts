@@ -43,3 +43,8 @@ export async function shareFile(id: number): Promise<string> {
 export async function deleteFile(id: number): Promise<void> {
     await api.delete(`/files/${id}/`);
 };
+
+export async function updateFileMeta(id: number, name: string, comment: string): Promise<FileMeta> {
+    const { data } = await api.patch(`/files/${id}/`, { name, comment });
+    return data;
+}

@@ -1,13 +1,16 @@
-import { Download, Share2, Trash, FilePenLine } from "lucide-react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Download, Share2, Trash, FilePenLine } from "lucide-react";
 
 import { downloadFile, shareFile, deleteFile, type FileMeta} from "../../api/files";
 import { useToast } from "../../context/ToastContextHelpers";
+import EditFileModal from "./EditFileModal";
 
 import "./FileItem.css";
 
 
 function FileItem({ file }: { file: FileMeta }) {
+    const [isEditOpen, setIsEditOpen] = useState(false);
     const toast = useToast();
     const qc = useQueryClient();
 
@@ -81,7 +84,7 @@ function FileItem({ file }: { file: FileMeta }) {
                     <button className="icon-btn" onClick={() => downloadMutation.mutate()} disabled={downloadMutation.isPending}>
                         <Download />
                     </button>
-                    <button className="icon-btn" onClick={() => {}}>
+                    <button className="icon-btn" onClick={() => setIsEditOpen(true)}>
                         <FilePenLine />
                     </button>
                     <button className="icon-btn" onClick={() => shareMutation.mutate()} disabled={shareMutation.isPending}>
@@ -97,6 +100,13 @@ function FileItem({ file }: { file: FileMeta }) {
                     </button>
                 </div>
             </div>
+
+        <EditFileModal
+            isOpen={isEditOpen}
+            onRequestClose={() => setIsEditOpen(false)}
+            file={file}
+            />
+
         </div>
     );
 };
