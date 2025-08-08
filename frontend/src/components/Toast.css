@@ -1,0 +1,29 @@
+.toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 9999;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--card-bg);
+    box-shadow: var(--shadow-md);
+    min-width: 220px;
+}
+
+.toast-info      { border-left: 4px solid var(--accent); }
+.toast-success   { border-left: 4px solid #22c55e; }
+.toast-error     { border-left: 4px solid #ef4444; }
+.toast-warning   { border-left: 4px solid #facc15; }
+
+.toast-msg       { flex: 1; font-size: 0.875rem; }
+.toast-close     { border: none; background: transparent; cursor: pointer; }
+.toast-close svg { width: 16px; height: 16px; }
