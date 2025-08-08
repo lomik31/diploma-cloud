@@ -1,6 +1,6 @@
 import { useUploadModal } from "../../context/UploadModalContextHelpers";
 
-export type UploadButtonProps = {
+interface UploadButtonProps {
     label?: string;
     className?: string;
 };

@@ -3,12 +3,12 @@ import { useMemo, useRef, useState } from "react";
 import "./UploadModal.css";
 
 
-export type UploadModalProps = {
+interface UploadModalProps {
     isOpen: boolean;
     onRequestClose: () => void;
-    acceptedTypes?: string; // e.g. 'image/*'
-    uploadFn?: (files: File[]) => Promise<void>; // optional: inject your API call
-    onComplete?: (files: File[]) => void; // notify parent after successful upload
+    acceptedTypes?: string;
+    uploadFn?: (files: File[]) => Promise<void>;
+    onComplete?: (files: File[]) => void;
 };
 
 const DEFAULT_ACCEPT = "*";

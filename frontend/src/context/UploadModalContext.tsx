@@ -4,7 +4,7 @@ import { UploadModalContext, type UploadModalContextValue, type UploadModalReaso
 import UploadModal from "../components/filesPage/UploadModal";
 
 
-export type UploadModalProviderProps = {
+interface UploadModalProviderProps {
     children: React.ReactNode;
     acceptedTypes?: string;
     uploadFn?: (files: File[]) => Promise<void>;
