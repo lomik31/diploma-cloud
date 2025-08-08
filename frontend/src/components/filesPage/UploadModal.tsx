@@ -1,5 +1,8 @@
 import { useMemo, useRef, useState } from "react";
 
+import "./UploadModal.css";
+
+
 export type UploadModalProps = {
     isOpen: boolean;
     onRequestClose: () => void;

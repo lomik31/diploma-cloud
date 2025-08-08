@@ -1,0 +1,59 @@
+.fs-overlay {
+    position: fixed; inset: 0;
+    background: rgba(9,12,18,0.7);
+    display: grid; place-items: center;
+    z-index: 1000;
+}
+.fs-modal {
+    width: min(800px, 92vw); max-height: 88vh;
+    background: #0f1420;
+    border: 1px solid #1a2234;
+    border-radius: 14px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    padding: 16px; display: flex; flex-direction: column;
+}
+.fs-modal__header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 8px; border-bottom: 1px solid #1a2234;
+}
+.fs-modal__close {
+    width: 36px; height: 36px; border-radius: 8px;
+    border: 0; background: transparent; color: #9fb1d1;
+    font-size: 24px; cursor: pointer;
+}
+.fs-modal__close:hover { background: #121a2a; }
+
+.fs-dropzone {
+    margin-top: 14px; border: 2px dashed #2a3957; border-radius: 12px;
+    background: #0b1120; padding: 28px; text-align: center; cursor: pointer;
+    user-select: none; outline: none;
+}
+.fs-dropzone--active { border-color: #60a5fa; background: #0b1630; }
+.fs-dropzone__input { display: none; }
+.fs-dropzone__inner { display: grid; justify-items: center; gap: 10px; }
+.fs-dropzone__icon { font-size: 36px; }
+.fs-dropzone__text { font-size: 14px; color: #c8d5ec; }
+.fs-dropzone__sep { display: inline-block; margin: 0 8px; opacity: .7; }
+.fs-dropzone__link { color: #93c5fd; text-decoration: underline; }
+
+.fs-filelist { list-style: none; margin: 16px 0 0; padding: 0; overflow: auto; }
+.fs-file {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 12px; border: 1px solid #1a2234; border-radius: 10px; background: #0c1322;
+    margin-bottom: 10px;
+}
+.fs-file__meta { display: flex; flex-direction: column; gap: 4px; }
+.fs-file__name { font-weight: 600; color: #e6e9ef; word-break: break-all; }
+.fs-file__size { font-size: 12px; color: #9fb1d1; }
+.fs-file__remove {
+    border: 0; background: #182235; color: #c8d5ec; padding: 8px 10px; border-radius: 8px; cursor: pointer;
+}
+.fs-file__remove:hover { background: #1a2742; }
+.fs-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+
+.fs-btn {
+    background: #3b82f6; color: #fff; border: 0; padding: 10px 14px;
+    border-radius: 10px; cursor: pointer; font-weight: 600;
+}
+.fs-btn:hover:enabled { filter: brightness(1.05); }
+.fs-btn:disabled { opacity: .6; cursor: default; }
