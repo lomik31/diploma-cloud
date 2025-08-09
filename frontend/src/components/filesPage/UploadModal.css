@@ -2,7 +2,7 @@
     position: fixed; inset: 0;
     background: rgba(9,12,18,0.7);
     display: grid; place-items: center;
-    z-index: 1000;
+    z-index: 9999;
 }
 .fs-modal {
     width: min(800px, 92vw); max-height: 88vh;

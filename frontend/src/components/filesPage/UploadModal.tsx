@@ -1,5 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 
+import ModalPortal from "../ModalPortal";
+
 import "./UploadModal.css";
 
 
@@ -100,76 +102,82 @@ function UploadModal({
     const hasFiles = files.length > 0;
 
     return (
-        <div className="fs-overlay" onMouseDown={onOverlayMouseDown}>
-            <div className="fs-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
-                <header className="fs-modal__header">
-                    <h2 id="upload-title">Загрузка файлов</h2>
-                    <button
-                        type="button"
-                        className="fs-modal__close"
-                        aria-label="Закрыть"
-                        onClick={onRequestClose}
-                    >
-                        ×
-                    </button>
-                </header>
+        <ModalPortal>
+            <div className="fs-overlay" onMouseDown={onOverlayMouseDown}>
+                <div className="fs-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
+                    <div className="fs-overlay" onMouseDown={onOverlayMouseDown}>
+                        <div className="fs-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
+                            <header className="fs-modal__header">
+                                <h2 id="upload-title">Загрузка файлов</h2>
+                                <button
+                                    type="button"
+                                    className="fs-modal__close"
+                                    aria-label="Закрыть"
+                                    onClick={onRequestClose}
+                                >
+                                    ×
+                                </button>
+                            </header>
 
-                <div
-                    className={`fs-dropzone ${isDropzoneActive ? "fs-dropzone--active" : ""}`}
-                    onDragOver={onDropzoneDragOver}
-                    onDragLeave={onDropzoneDragLeave}
-                    onDrop={onDropzoneDrop}
-                    onClick={triggerFileDialog}
-                    role="button"
-                    aria-label="Перетащите файлы сюда или кликните для выбора"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") triggerFileDialog();
-                    }}
-                >
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        multiple
-                        accept={acceptAttr}
-                        className="fs-dropzone__input"
-                        onChange={onPickFiles}
-                    />
-                    <div className="fs-dropzone__inner">
-                        <div className="fs-dropzone__icon">⬆️</div>
-                        <div className="fs-dropzone__text">
-                            Перетащите файлы сюда
-                            <span className="fs-dropzone__sep">или</span>
-                            <span className="fs-dropzone__link">выберите на компьютере</span>
+                            <div
+                                className={`fs-dropzone ${isDropzoneActive ? "fs-dropzone--active" : ""}`}
+                                onDragOver={onDropzoneDragOver}
+                                onDragLeave={onDropzoneDragLeave}
+                                onDrop={onDropzoneDrop}
+                                onClick={triggerFileDialog}
+                                role="button"
+                                aria-label="Перетащите файлы сюда или кликните для выбора"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") triggerFileDialog();
+                                }}
+                            >
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    multiple
+                                    accept={acceptAttr}
+                                    className="fs-dropzone__input"
+                                    onChange={onPickFiles}
+                                />
+                                <div className="fs-dropzone__inner">
+                                    <div className="fs-dropzone__icon">⬆️</div>
+                                    <div className="fs-dropzone__text">
+                                        Перетащите файлы сюда
+                                        <span className="fs-dropzone__sep">или</span>
+                                        <span className="fs-dropzone__link">выберите на компьютере</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {hasFiles && (
+                                <>
+                                    <ul className="fs-filelist">
+                                        {files.map((f, i) => (
+                                            <li key={`${f.name}-${f.size}-${f.lastModified}`} className="fs-file">
+                                                <div className="fs-file__meta">
+                                                    <span className="fs-file__name">{f.name}</span>
+                                                    <span className="fs-file__size">{(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                </div>
+                                                <button className="fs-file__remove" onClick={() => removeFile(i)}>
+                                                    Удалить
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <div className="fs-actions">
+                                        <button className="fs-btn" disabled={isUploading} onClick={handleUpload}>
+                                            {isUploading ? "Загрузка..." : "Загрузить на сервер"}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
-
-                {hasFiles && (
-                    <>
-                        <ul className="fs-filelist">
-                            {files.map((f, i) => (
-                                <li key={`${f.name}-${f.size}-${f.lastModified}`} className="fs-file">
-                                    <div className="fs-file__meta">
-                                        <span className="fs-file__name">{f.name}</span>
-                                        <span className="fs-file__size">{(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                                    </div>
-                                    <button className="fs-file__remove" onClick={() => removeFile(i)}>
-                                        Удалить
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-
-                        <div className="fs-actions">
-                            <button className="fs-btn" disabled={isUploading} onClick={handleUpload}>
-                                {isUploading ? "Загрузка..." : "Загрузить на сервер"}
-                            </button>
-                        </div>
-                    </>
-                )}
             </div>
-        </div>
+        </ModalPortal>
     );
 }
 
