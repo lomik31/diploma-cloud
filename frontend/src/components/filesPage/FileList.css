@@ -1,2 +1,8 @@
-.filelist { max-width: 1280px; width: 100%; margin: 2rem auto; padding: 0 1.5rem; }
+.filelist {
+    max-width: 1280px;
+    width: 100%;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+}
 .filelist__empty { text-align: center; color: #64748b; }
