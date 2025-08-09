@@ -18,7 +18,6 @@ api.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
         if (error.response?.status === 401 && !originalRequest._retry) { // когда ошибка 401, и запрос еще не был повторен
-            console.log(originalRequest);
             originalRequest._retry = true;
             try {
                 if (!localStorage.getItem("refresh_token")) {
@@ -27,7 +26,7 @@ api.interceptors.response.use(
                 const { data } = await axios.post(
                     "/auth/token/refresh/",
                     {
-                        refreshToken: localStorage.getItem("refresh_token")
+                        refresh: localStorage.getItem("refresh_token")
                     },
                     {
                         baseURL: api.defaults.baseURL
