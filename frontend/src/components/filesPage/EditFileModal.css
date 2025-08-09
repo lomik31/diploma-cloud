@@ -1,53 +1,39 @@
-.fr-overlay {
-    position: fixed; inset: 0;
-    background: rgba(9,12,18,0.7);
-    display: grid; place-items: center;
-    z-index: 9999;
+/* Формы в модалке редактирования */
+.fm-form {
+    margin-top: 14px;
+    display: grid;
+    gap: 12px;
 }
 
-.fr-modal {
-    width: min(520px, 92vw);
-    background: #0f1420;
+.fm-field { display: grid; gap: 6px; }
+
+.fm-label {
+    font-size: 14px;
+    color: #c8d5ec;
+    user-select: none;
+}
+
+.fm-input {
+    padding: 10px 12px;
     border: 1px solid #1a2234;
-    border-radius: 14px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    border-radius: 10px;
+    background: #0c1322;
+    color: #e6e9ef;
+    outline: none;
+}
+.fm-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
 }
 
-.fr-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 16px; border-bottom: 1px solid #1a2234; color: #e6e9ef;
+.fm-textarea { resize: vertical; min-height: 90px; }
+
+.fm-cancel {
+    border: 0;
+    background: #182235;
+    color: #c8d5ec;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
 }
-
-.fr-close {
-    width: 36px; height: 36px; border-radius: 8px;
-    border: 0; background: transparent; color: #9fb1d1;
-    font-size: 24px; cursor: pointer;
-}
-.fr-close:hover { background: #121a2a; }
-
-.fr-body { padding: 16px; display: grid; gap: 10px; }
-
-.fr-label { font-size: 14px; color: #c8d5ec; }
-
-.fr-input {
-    background: #0c1322; color: #e6e9ef;
-    border: 1px solid #1a2234; border-radius: 10px;
-    padding: 10px 12px; outline: none;
-}
-.fr-input:focus { border-color: #3b82f6; }
-
-.fr-actions {
-    display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;
-}
-
-.fr-btn {
-    background: #3b82f6; color: #fff; border: 0; padding: 10px 14px;
-    border-radius: 10px; cursor: pointer; font-weight: 600;
-}
-.fr-btn:hover:enabled { filter: brightness(1.05); }
-.fr-btn:disabled { opacity: .6; cursor: default; }
-
-.fr-btn--ghost {
-    background: #182235; color: #c8d5ec;
-}
-.fr-btn--ghost:hover { background: #1a2742; }
+.fm-cancel:hover { background: #1a2742; }

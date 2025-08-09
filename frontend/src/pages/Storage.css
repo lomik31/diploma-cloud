@@ -10,3 +10,4 @@
     opacity: .7;
     text-align: center;
 }
+.trimmed-text { white-space: pre-line; }

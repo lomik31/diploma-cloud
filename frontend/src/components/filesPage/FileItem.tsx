@@ -7,6 +7,7 @@ import { useToast } from "../../context/ToastContextHelpers";
 import EditFileModal from "./EditFileModal";
 
 import "./FileItem.css";
+import TrimmedText from "../TrimmedText";
 
 
 function FileItem({ file }: { file: FileMeta }) {
@@ -67,7 +68,7 @@ function FileItem({ file }: { file: FileMeta }) {
             <div className="row-grid">
                 <div className="file-info">
                     <p className="file-name">{file.filename}</p>
-                    <p className="comment">{file.comment}</p>
+                    <TrimmedText className="comment" text={file.comment} limit={50} />
                 </div>
 
                 <div className="meta">
@@ -101,10 +102,10 @@ function FileItem({ file }: { file: FileMeta }) {
                 </div>
             </div>
 
-        <EditFileModal
-            isOpen={isEditOpen}
-            onRequestClose={() => setIsEditOpen(false)}
-            file={file}
+            <EditFileModal
+                isOpen={isEditOpen}
+                onRequestClose={() => setIsEditOpen(false)}
+                file={file}
             />
 
         </div>
