@@ -6,7 +6,6 @@ COPY package*.json ./
 
 
 COPY src ./src
-COPY public ./public
 COPY tsconfig*.json ./
 COPY vite.config.ts ./
 COPY index.html ./
