@@ -1,6 +1,6 @@
 from django.db.models import QuerySet
 from django.http import FileResponse, Http404
-from rest_framework import generics, permissions, viewsets
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotAuthenticated
 from rest_framework.permissions import IsAuthenticated
@@ -38,6 +38,37 @@ class FileViewSet(viewsets.ModelViewSet):
             filename=filename,
             size=upload.size,
         )
+
+    def create(self, request: Request, *args: str, **kwargs: str) -> Response:
+        """
+        Поддерживает:
+        - один файл в поле `content` (оставляем поведение как было — через perform_create)
+        - несколько файлов: несколько полей `content` (getlist)
+        Доп.: можно передавать filename[] и comment[] той же длины.
+        """
+        files = request.FILES.getlist("content")
+
+        if len(files) <= 1:
+            return super().create(request, *args, **kwargs)
+
+        filenames = request.data.getlist("filename")
+        comments  = request.data.getlist("comment")
+
+        created = []
+        for i, upload in enumerate(files):
+            name    = (filenames[i] if i < len(filenames) else None) or upload.name
+            comment = (comments[i]  if i < len(comments)  else "") or ""
+            obj = File.objects.create(
+                owner=request.user,
+                filename=name,
+                comment=comment,
+                size=upload.size,
+                content=upload,
+            )
+            created.append(obj)
+
+        serializer = self.get_serializer(created, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # -------- extra actions --------
 
