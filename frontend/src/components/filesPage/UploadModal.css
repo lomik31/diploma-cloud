@@ -57,3 +57,7 @@
 }
 .fs-btn:hover:enabled { filter: brightness(1.05); }
 .fs-btn:disabled { opacity: .6; cursor: default; }
+
+#upload-title {
+    margin: 8px;
+}
