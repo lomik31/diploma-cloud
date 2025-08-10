@@ -1,11 +1,13 @@
 .toast-container {
     position: fixed;
-    bottom: 1rem;
+    top: 1rem;
     right: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     z-index: 9999;
+    background-color: #ffffff;
+    border-radius: 10px;
 }
 
 .toast {
@@ -17,6 +19,7 @@
     background: var(--card-bg);
     box-shadow: var(--shadow-md);
     min-width: 220px;
+    color: #000000;
 }
 
 .toast-info      { border-left: 4px solid var(--accent); }

@@ -15,6 +15,23 @@ function FileItem({ file }: { file: FileMeta }) {
     const toast = useToast();
     const qc = useQueryClient();
 
+    const createdDate: string = new Date(file.created).toLocaleDateString("ru-RU", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    });
+    const downloadDate: string = file.last_download ? new Date(file.last_download).toLocaleDateString("ru-RU", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    }) : "N/A";
+
     const deleteMutation = useMutation({
         mutationFn: () => deleteFile(file.id),
 
@@ -73,25 +90,30 @@ function FileItem({ file }: { file: FileMeta }) {
 
                 <div className="meta">
                     <p className="meta-label">Создан</p>
-                    <p className="meta-value">{file.created}</p>
+                    <p className="meta-value">{createdDate}</p>
                 </div>
 
                 <div className="meta">
                     <p className="meta-label">Скачан</p>
-                    <p className="meta-value">{file.last_download}</p>
+                    <p className="meta-value">{downloadDate}</p>
+                </div>
+
+                <div className="meta">
+                    <p className="meta-label">Размер</p>
+                    <p className="meta-value">{file.size_h}</p>
                 </div>
 
                 <div className="actions">
-                    <button className="icon-btn" onClick={() => downloadMutation.mutate()} disabled={downloadMutation.isPending}>
+                    <button className="icon-btn" title="Скачать файл" onClick={() => downloadMutation.mutate()} disabled={downloadMutation.isPending}>
                         <Download />
                     </button>
-                    <button className="icon-btn" onClick={() => setIsEditOpen(true)}>
+                    <button className="icon-btn" title="Переименовать файл"onClick={() => setIsEditOpen(true)}>
                         <FilePenLine />
                     </button>
-                    <button className="icon-btn" onClick={() => shareMutation.mutate()} disabled={shareMutation.isPending}>
+                    <button className="icon-btn" title="Поделиться файлом" onClick={() => shareMutation.mutate()} disabled={shareMutation.isPending}>
                         <Share2 />
                     </button>
-                    <button className="icon-btn" onClick={() => {
+                    <button className="icon-btn" title="Удалить файл" onClick={() => {
                         if (!window.confirm("Вы уверены, что хотите удалить этот файл?")) {
                             return;
                         }
