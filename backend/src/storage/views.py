@@ -1,8 +1,10 @@
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
 from django.http import FileResponse, Http404
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotAuthenticated
+from rest_framework.exceptions import NotAuthenticated, NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -11,6 +13,7 @@ from .models import File
 from .permissions import IsOwnerOrAdmin
 from .serializers import FileSerializer
 
+UserModel = get_user_model()
 
 class FileViewSet(viewsets.ModelViewSet):
     """CRUD для файлов пользователя."""
@@ -22,13 +25,23 @@ class FileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self) -> QuerySet[File]:
         user = self.request.user
-        owner_id = self.request.query_params.get("owner")
+        owner_id: int | None = self.request.query_params.get("owner")
         if not user or not user.is_authenticated:
             raise NotAuthenticated
-        qs = File.objects.all() if user.is_staff else File.objects.filter(owner=user)
-        if owner_id and user.is_staff:
-            qs = qs.filter(owner__id=owner_id)
+
+        qs = File.objects
+        if user.is_staff and owner_id:
+            try:
+                owner = UserModel.objects.get(id=owner_id)
+            except (UserModel.DoesNotExist, ValidationError) as exc:
+                msg = "Пользователь с указанным ID не найден."  # noqa: RUF001
+                raise NotFound(msg) from exc
+            qs = qs.filter(owner=owner)
+        else:
+            qs = qs.filter(owner=user)
+
         return qs.order_by("-created")
+
 
     def perform_create(self, serializer: FileSerializer) -> None:
         upload = self.request.data["content"]
