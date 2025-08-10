@@ -36,15 +36,33 @@ function EditFileModal({ isOpen, onRequestClose, file }: Props) {
 
     const mutation = useMutation({
         mutationFn: () => updateFileMeta(file.id, name.trim(), comment.trim()),
+        onMutate: async () => {
+            await qc.cancelQueries({ queryKey: ["files"] });
+
+            const prevEntries = qc.getQueriesData<FileMeta[]>({ queryKey: ["files"] });
+            const nextName = name.trim();
+            const nextComment = comment.trim();
+
+            prevEntries.forEach(([key, old]) => {
+                if (!old) return;
+                qc.setQueryData<FileMeta[]>(key, old.map(f =>
+                    f.id === file.id ? { ...f, filename: nextName, comment: nextComment } : f
+                ));
+            });
+
+            return { prevEntries };
+        },
         onSuccess: (updated) => {
-            // Обновляем кэш списка файлов
-            qc.setQueryData<FileMeta[]>(["files"], (prev) =>
-                prev?.map((f) => (f.id === updated.id ? updated : f)) ?? prev
-            );
+            const entries = qc.getQueriesData<FileMeta[]>({ queryKey: ["files"] });
+            entries.forEach(([key, old]) => {
+                if (!old) return;
+                qc.setQueryData<FileMeta[]>(key, old.map(f => (f.id === updated.id ? updated : f)));
+            });
             toast({ message: "Изменения сохранены" });
             onRequestClose();
         },
-        onError: () => {
+        onError: (_e, _v, ctx) => {
+            ctx?.prevEntries?.forEach(([key, data]) => qc.setQueryData(key, data));
             toast({ message: "Не удалось сохранить изменения", type: "error" });
         },
     });
