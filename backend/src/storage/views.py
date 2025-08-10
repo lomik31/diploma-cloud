@@ -28,7 +28,7 @@ class FileViewSet(viewsets.ModelViewSet):
         qs = File.objects.all() if user.is_staff else File.objects.filter(owner=user)
         if owner_id and user.is_staff:
             qs = qs.filter(owner__id=owner_id)
-        return qs
+        return qs.order_by("-created")
 
     def perform_create(self, serializer: FileSerializer) -> None:
         upload = self.request.data["content"]
