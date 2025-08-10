@@ -72,7 +72,7 @@ function EditFileModal({ isOpen, onRequestClose, file }: Props) {
                             aria-label="Закрыть"
                             onClick={onRequestClose}
                         >
-                            <X size={14}/>
+                            <X size={21}/>
                         </button>
                     </header>
 

@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { X } from "lucide-react";
 
 import ModalPortal from "../ModalPortal";
 
@@ -115,7 +116,7 @@ function UploadModal({
                                     aria-label="Закрыть"
                                     onClick={onRequestClose}
                                 >
-                                    ×
+                                    <X size={21} />
                                 </button>
                             </header>
 
