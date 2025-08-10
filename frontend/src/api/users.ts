@@ -16,3 +16,11 @@ export interface UserMeta {
 export async function getUsers(): Promise<UserMeta[]> {
     return (await api.get("/users/")).data;
 }
+
+export async function updateUser(id: number, data: Partial<UserMeta>): Promise<UserMeta> {
+    return (await api.patch(`/users/${id}/`, data)).data;
+}
+
+export async function deleteUser(id: number): Promise<void> {
+    await api.delete(`/users/${id}/`);
+}
