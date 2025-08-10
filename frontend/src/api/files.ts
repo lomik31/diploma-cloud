@@ -12,8 +12,10 @@ export interface FileMeta {
     last_download: string | null;
 }
 
-export async function listFiles(): Promise<FileMeta[]> {
-    const url = "/files/";
+export async function listFiles(ownerId?: number): Promise<FileMeta[]> {
+    const url = ownerId
+        ? `/files/?owner=${ownerId}`
+        : "/files/";
     const { data } = await api.get(url);
     return data;
 };

@@ -17,6 +17,7 @@ function AppContent() {
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/files" element={<StoragePage />} />
+                <Route path="/files/:owner" element={<StoragePage />} />
             </Routes>
         </BrowserRouter>
     );

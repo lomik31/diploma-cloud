@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import NavBar from "../components/Navbar";
@@ -13,11 +14,6 @@ import "./Storage.css";
 
 
 function Storage() {
-    const filesQuery = useQuery<FileMeta[]>({
-        queryKey: ["files"],
-        queryFn: listFiles,
-    })
-
     const adminQuery = useQuery<UserMeta[]>({
         queryKey: ["users"],
         queryFn: getUsers,
@@ -25,6 +21,15 @@ function Storage() {
 
     const isAuth = isAuthenticated();
     const isAdmin = adminQuery.data != null;
+    const { owner } = useParams<{ owner?: string }>();
+    const ownerId: number | undefined =
+        owner !== undefined && !Number.isNaN(Number(owner)) ? Number(owner) : undefined;
+
+    const filesQuery = useQuery<FileMeta[]>({
+        queryKey: ["files", ownerId ?? null],
+        queryFn: () => listFiles(ownerId),
+    })
+
 
     const uploadToServer = async (files: File[]) => {
         const form = new FormData();
