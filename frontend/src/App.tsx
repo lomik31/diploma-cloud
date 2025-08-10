@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 import ToastProvider from "./context/ToastContext";
 import StoragePage from "./pages/Storage";
 import MainPage from "./pages/Welcome";
+import AdminPage from "./pages/Admin";
 
 import "./App.css";
 
@@ -18,6 +19,7 @@ function AppContent() {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/files" element={<StoragePage />} />
                 <Route path="/files/:owner" element={<StoragePage />} />
+                <Route path="/admin" element={<AdminPage />} />
             </Routes>
         </BrowserRouter>
     );
