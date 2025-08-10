@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
+import type { FileMeta } from "../api/files";
 import { UploadModalContext, type UploadModalContextValue, type UploadModalReason } from "./UploadModalContextHelpers";
 import UploadModal from "../components/filesPage/UploadModal";
 
@@ -7,7 +8,7 @@ import UploadModal from "../components/filesPage/UploadModal";
 interface UploadModalProviderProps {
     children: React.ReactNode;
     acceptedTypes?: string;
-    uploadFn?: (files: File[]) => Promise<void>;
+    uploadFn: (files: File[], comments: string[]) => Promise<FileMeta | FileMeta[]>;
     onComplete?: (files: File[]) => void;
 };
 

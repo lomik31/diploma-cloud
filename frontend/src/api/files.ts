@@ -20,11 +20,14 @@ export async function listFiles(ownerId?: number): Promise<FileMeta[]> {
     return data;
 };
 
-export async function uploadFile(file: File, comment?: string): Promise<FileMeta> {
+export async function uploadFile(files: File[], comments: string[]): Promise<FileMeta> {
+    if (files.length !== comments.length) {
+        throw new Error("Number of files and comments must match");
+    }
     const formData = new FormData();
-    formData.append("content", file);
-    if (comment) {
-        formData.append("comment", comment);
+    for (let i = 0; i < files.length; i++) {
+        formData.append("content", files[i]);
+        formData.append("comment", comments[i]);
     }
     const { data } = await api.post("/files/", formData, {
         headers: { "Content-Type": "multipart/form-data" },

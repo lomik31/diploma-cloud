@@ -1,17 +1,22 @@
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { listFiles, uploadFile, type FileMeta } from "../api/files";
+import { getUsers, type UserMeta } from "../api/users";
+import { UploadModalProvider } from "../context/UploadModalContext";
+import { useToast } from "../context/ToastContextHelpers";
 import NavBar from "../components/Navbar";
 import FileList from "../components/filesPage/FileList";
 import UploadButton from "../components/filesPage/UploadButton";
 import AdminPanelButton from "../components/AdminPanelButton";
-import { UploadModalProvider } from "../context/UploadModalContext";
-import { getUsers, type UserMeta } from "../api/users";
-import { listFiles, type FileMeta } from "../api/files";
+
 import "./Storage.css";
 
 
 function Storage() {
+    const qc = useQueryClient();
+    const toast = useToast();
+
     const adminQuery = useQuery<UserMeta[]>({
         queryKey: ["users"],
         queryFn: getUsers,
@@ -27,20 +32,17 @@ function Storage() {
         queryFn: () => listFiles(ownerId),
     })
 
-
-    const uploadToServer = async (files: File[]) => {
-        const form = new FormData();
-        files.forEach((f) => form.append("files", f));
-        // const res = await fetch("/api/upload", { method: "POST", body: form });
-        // if (!res.ok) throw new Error("Upload failed");
-        await new Promise((r) => setTimeout(r, 1000));
-    };
-
     if (filesQuery.isLoading) return <p>Loading...</p>;
     if (filesQuery.error) return <p>Error loading files</p>;
 
     return (
-        <UploadModalProvider acceptedTypes="*" uploadFn={uploadToServer} onComplete={() => console.log("Upload complete") }>
+        <UploadModalProvider
+            acceptedTypes="*"
+            uploadFn={uploadFile}
+            onComplete={() => {
+                qc.invalidateQueries({ queryKey: ["files"] });
+                toast({ message: "Файлы успешно загружены" });
+            }}>
             <div className="fs-page">
                 <NavBar rightSlot1={isAdmin ? <AdminPanelButton /> : null} rightSlot2={<UploadButton className="navbar__btn"/>} brandToMain />
 
