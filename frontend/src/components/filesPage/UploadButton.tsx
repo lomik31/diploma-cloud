@@ -1,15 +1,18 @@
+import { CloudUpload } from "lucide-react";
+
 import { useUploadModal } from "../../context/UploadModalContextHelpers";
+
 
 interface UploadButtonProps {
     label?: string;
     className?: string;
 };
 
-function UploadButton({ label = "Загрузить файлы", className = "fs-btn" }: UploadButtonProps) {
+function UploadButton({ className = "fs-btn" }: UploadButtonProps) {
     const { open } = useUploadModal();
     return (
-        <button onClick={() => open("manual")} className={className}>
-            {label}
+        <button onClick={() => open("manual")} className={className} title="Загрузить файл(ы)">
+            <CloudUpload size={21}/>
         </button>
     );
 }

@@ -40,7 +40,7 @@ function Storage() {
     return (
         <UploadModalProvider acceptedTypes="*" uploadFn={uploadToServer} onComplete={() => console.log("Upload complete") }>
             <div className="fs-page">
-                <NavBar isAuth={isAuth} rightSlot1={isAdmin ? <AdminPanelButton /> : null} rightSlot2={<UploadButton />} brandToMain={true}/>
+                <NavBar isAuth={isAuth} rightSlot1={isAdmin ? <AdminPanelButton /> : null} rightSlot2={<UploadButton className="navbar__btn"/>} brandToMain={true}/>
 
                 <main className="fs-content">
                         <p className="fs-hint">Перетащите файл(ы) на страницу, чтобы быстро открыть окно загрузки.</p>
