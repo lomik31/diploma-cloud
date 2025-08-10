@@ -8,8 +8,6 @@ import AdminPanelButton from "../components/AdminPanelButton";
 import { UploadModalProvider } from "../context/UploadModalContext";
 import { getUsers, type UserMeta } from "../api/users";
 import { listFiles, type FileMeta } from "../api/files";
-import { isAuthenticated } from "../utils/auth";
-
 import "./Storage.css";
 
 
@@ -19,7 +17,6 @@ function Storage() {
         queryFn: getUsers,
     });
 
-    const isAuth = isAuthenticated();
     const isAdmin = adminQuery.data != null;
     const { owner } = useParams<{ owner?: string }>();
     const ownerId: number | undefined =
@@ -45,7 +42,7 @@ function Storage() {
     return (
         <UploadModalProvider acceptedTypes="*" uploadFn={uploadToServer} onComplete={() => console.log("Upload complete") }>
             <div className="fs-page">
-                <NavBar isAuth={isAuth} rightSlot1={isAdmin ? <AdminPanelButton /> : null} rightSlot2={<UploadButton className="navbar__btn"/>} brandToMain={true}/>
+                <NavBar rightSlot1={isAdmin ? <AdminPanelButton /> : null} rightSlot2={<UploadButton className="navbar__btn"/>} brandToMain />
 
                 <main className="fs-content">
                         <p className="fs-hint">Перетащите файл(ы) на страницу, чтобы быстро открыть окно загрузки.</p>
