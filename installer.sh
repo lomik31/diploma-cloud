@@ -22,7 +22,7 @@ else
 fi
 set -e
 
-if [ "$NEED_DOCKER" == true ]; then
+if [ "$NEED_DOCKER" == false ]; then
     set +e
     docker compose version > /dev/null
     if [ $? -eq 0 ]; then
