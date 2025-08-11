@@ -49,7 +49,7 @@ if [ "$NEED_DOCKER" = false ]; then
     set -e
 fi
 
-if [ "$NEED_DOCKER" = true || "$NEED_DOCKER_COMPOSE" = true ]; then
+if [ "$NEED_DOCKER" = true ] || [ "$NEED_DOCKER_COMPOSE"= true ]; then
     echo "Устанавливаем Docker..."
     curl -s https://get.docker.com | bash
     echo "Docker успешно установлен."
@@ -183,7 +183,7 @@ echo "DOMAINS=$DOMAINS_OUT" >> .env
 
 ###################### СЕРТИФИКАТЫ ######################
 
-if [ ls certs/*.crt >/dev/null && ls certs/*.key ]
+if [ ls certs/*.crt >/dev/null ] && [ ls certs/*.key ]
 then
     echo "Сертификаты найдены. Используем их."
 else
