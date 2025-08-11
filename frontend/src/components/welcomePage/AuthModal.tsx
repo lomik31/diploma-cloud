@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -30,6 +31,8 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
     const [rPass1, setRPass1] = useState("");
     const [rPass2, setRPass2] = useState("");
     const [registerError, setRegisterError] = useState<string | null>(null);
+    const [regFieldErrors, setRegFieldErrors] = useState<Record<string, string[]>>({});
+    const [loginFieldErrors, setLoginFieldErrors] = useState<Record<string, string[]>>({});
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -69,13 +72,25 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
         if (!canLogin || isSubmitting) return;
         setIsSubmitting(true);
         setLoginError(null);
+        setLoginFieldErrors({});
         try {
             await login(loginUsername.trim(), loginPassword.trim());
             navigate("/files", { replace: true });
         } catch (e: unknown) {
-            const err = e as { response?: { status?: number }, status?: number };
+            const err = e as { response?: { status?: number; data?: unknown }, status?: number };
             const status = err.response?.status ?? err.status;
-            if (status === 401) {
+            if (status === 400 && err.response?.data && typeof err.response.data === "object") {
+                const raw = err.response.data as Record<string, unknown>;
+                const normalized: Record<string, string[]> = {};
+                for (const [k, v] of Object.entries(raw)) {
+                    if (Array.isArray(v)) normalized[k] = v.map(String);
+                    else if (typeof v === "string") normalized[k] = [v];
+                }
+                if (typeof raw.detail === "string") {
+                    normalized.non_field_errors = [...(normalized.non_field_errors ?? []), String(raw.detail)];
+                }
+                setLoginFieldErrors(normalized);
+            } else if (status === 401) {
                 setLoginError("Неверный логин или пароль. Попробуйте ещё раз.");
             } else if (status === 429) {
                 setLoginError("Слишком много попыток. Подождите немного и повторите.");
@@ -92,13 +107,22 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
             return;
         setIsSubmitting(true);
         setRegisterError(null);
+        setRegFieldErrors({});
         try {
             await registerApi(rUser.trim(), rEmail.trim(), rFullname.trim(), rPass1.trim());
             await login(rUser.trim(), rPass1.trim());
         } catch (e: unknown) {
-            const err = e as { response?: { status?: number }, status?: number };
+            const err = e as { response?: { status?: number; data?: unknown }, status?: number };
             const status = err.response?.status ?? err.status;
-            if (status === 409) {
+            if (status === 400 && err.response?.data && typeof err.response.data === "object") {
+                const raw = err.response.data as Record<string, unknown>;
+                const normalized: Record<string, string[]> = {};
+                for (const [key, val] of Object.entries(raw)) {
+                    if (Array.isArray(val)) normalized[key] = val.map(String);
+                    else if (typeof val === "string") normalized[key] = [val];
+                }
+                setRegFieldErrors(normalized);
+            } else if (status === 409) {
                 setRegisterError("Такой пользователь уже существует.");
             } else {
                 setRegisterError("Не удалось зарегистрироваться. Попробуйте ещё раз.");
@@ -165,10 +189,18 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
                                         setLoginUsername(e.target.value);
                                         if (loginError)
                                             setLoginError(null);
+                                        setLoginFieldErrors((prev) => {
+                                            if (!prev.username) return prev;
+                                            const { username, ...rest } = prev;
+                                            return rest;
+                                        });
                                     }}
                                     placeholder="username"
                                     autoFocus
                                 />
+                                {loginFieldErrors.username?.map((m, i) => (
+                                    <div key={i} className="auth-error" role="alert">{m}</div>
+                                ))}
                             </label>
                             <label className="fm-field">
                                 <span className="fm-label">Пароль</span>
@@ -180,9 +212,21 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
                                         setLoginPassword(e.target.value);
                                         if (loginError)
                                             setLoginError(null);
+                                        setLoginFieldErrors((prev) => {
+                                            if (!prev.password) return prev;
+                                            const { password, ...rest } = prev;
+                                            return rest;
+                                        });
                                     }}
                                 />
+                                {loginFieldErrors.password?.map((m, i) => (
+                                    <div key={i} className="auth-error" role="alert">{m}</div>
+                                ))}
                             </label>
+
+                            {loginFieldErrors.non_field_errors?.map((m, i) => (
+                                <div key={i} className="auth-error auth-error--block" role="alert">{m}</div>
+                            ))}
 
                             {loginError && <div className="auth-error auth-error--block" role="alert">{loginError}</div>}
 
@@ -211,10 +255,18 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
                                         setRUser(e.target.value);
                                         if (registerError)
                                             setRegisterError(null);
+                                        setRegFieldErrors((prev) => {
+                                            if (!prev.username) return prev;
+                                            const { username, ...rest } = prev;
+                                            return rest;
+                                        });
                                     }}
                                     placeholder="username"
                                     autoFocus
                                 />
+                                {regFieldErrors.username?.map((m, i) => (
+                                     <div key={i} className="auth-error" role="alert">{m}</div>
+                                ))}
                             </label>
                             <label className="fm-field">
                                 <span className="fm-label">Email</span>
@@ -226,6 +278,11 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
                                         setREmail(e.target.value);
                                         if (registerError)
                                             setRegisterError(null);
+                                        setRegFieldErrors((prev) => {
+                                            if (!prev.email) return prev;
+                                            const { email, ...rest } = prev;
+                                            return rest;
+                                        });
                                     }}
                                     placeholder="user@example.com"
                                 />
@@ -242,6 +299,9 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
                                         }}
                                     placeholder="Иванов Иван Иванович"
                                 />
+                                {regFieldErrors.email?.map((m, i) => (
+                                    <div key={i} className="auth-error" role="alert">{m}</div>
+                                ))}
                             </label>
                             <label className="fm-field">
                                 <span className="fm-label">Пароль</span>
@@ -253,8 +313,16 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
                                         setRPass1(e.target.value);
                                         if (registerError)
                                             setRegisterError(null);
+                                        setRegFieldErrors((prev) => {
+                                            if (!prev.fullname) return prev;
+                                            const { fullname, ...rest } = prev;
+                                            return rest;
+                                        });
                                     }}
                                 />
+                                {regFieldErrors.fullname?.map((m, i) => (
+                                    <div key={i} className="auth-error" role="alert">{m}</div>
+                                ))}
                             </label>
                             <label className="fm-field">
                                 <span className="fm-label">Повтор пароля</span>
@@ -266,13 +334,24 @@ export default function AuthModal({ isOpen, onRequestClose }: Props) {
                                         setRPass2(e.target.value);
                                         if (registerError)
                                             setRegisterError(null);
+                                        setRegFieldErrors((prev) => {
+                                            if (!prev.password) return prev;
+                                            const { password, ...rest } = prev;
+                                            return rest;
+                                        });
                                     }}
                                 />
+                                {regFieldErrors.password?.map((m, i) => (
+                                    <div key={i} className="auth-error" role="alert">{m}</div>
+                                ))}
                             </label>
 
                             {rPass1 && rPass2 && rPass1 !== rPass2 && (
                                 <div className="auth-error" role="alert">Пароли не совпадают</div>
                             )}
+                            {regFieldErrors.non_field_errors?.map((m, i) => (
+                                <div key={i} className="auth-error auth-error--block" role="alert">{m}</div>
+                            ))}
                             {registerError && <div className="auth-error auth-error--block" role="alert">{registerError}</div>}
 
                             <div className="fs-actions">
