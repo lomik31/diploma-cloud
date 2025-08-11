@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { UploadCloud, Share2, ShieldCheck, FilePenLine } from "lucide-react";
 
 import NavBar from "../components/Navbar";
 import "./Welcome.css";
 
 function Welcome() {
+    const location = useLocation();
     return (
         <div className="welcome-page">
             <NavBar />
