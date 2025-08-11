@@ -43,5 +43,6 @@
     border-radius: 10px;
     text-decoration: none;
     font-weight: 600;
+    cursor: pointer;
 }
 .navbar__btn:hover { filter: brightness(1.05); }

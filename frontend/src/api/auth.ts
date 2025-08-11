@@ -5,14 +5,23 @@ export interface User {
 }
 
 export async function login (username: string, password: string): Promise<User> {
-    const { data } = await api.post("/auth/token/", { username, password });
+    const { data } = await api.post(
+        "/auth/token/",
+        { username, password },
+        { skipAuthRedirect401: true }
+    );
     sessionStorage.setItem("access_token", data.access);
     localStorage.setItem("refresh_token", data.refresh);
     return { isLoggedIn: true };
 };
 
 export async function logout () {
-    await api.post("/auth/token/logout/");
+    await api.post("/auth/token/logout/",
+        {
+            refresh: localStorage.getItem("refresh_token")
+        },
+        { skipAuthRedirect401: true }
+    );
     sessionStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
 };

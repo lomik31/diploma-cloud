@@ -1,6 +1,13 @@
 import axios from "axios";
 const baseURL = import.meta.env.VITE_API_URL;
 
+declare module "axios" {
+    export interface AxiosRequestConfig {
+        skipAuthRedirect401?: boolean;
+        _retry?: boolean;
+    }
+}
+
 const api = axios.create({
     baseURL: baseURL,
 });
@@ -17,6 +24,10 @@ api.interceptors.response.use(
     response => response,
     async error => {
         const originalRequest = error.config;
+
+        if (error.response?.status === 401 && originalRequest.skipAuthRedirect401)
+            return Promise.reject(error);
+
         if (error.response?.status === 401 && !originalRequest._retry) { // когда ошибка 401, и запрос еще не был повторен
             originalRequest._retry = true;
             try {
@@ -39,7 +50,7 @@ api.interceptors.response.use(
             } catch {
                 sessionStorage.removeItem("access_token");
                 localStorage.removeItem("refresh_token");
-                window.location.href = "/login/";
+                window.location.replace("/login");
             }
         }
 

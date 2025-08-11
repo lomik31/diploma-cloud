@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Cloud } from "lucide-react";
 
 import { useAuth } from "../context/AuthContextHelpers";
@@ -15,12 +15,13 @@ interface Props {
 function NavBar({rightSlot1, rightSlot2, brandToMain }: Props) {
     const brandTo = brandToMain ? "/" : "/files";
     const { logout, user } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     return (
         <header className="navbar">
             <div className="navbar__inner">
                 <Link to={brandTo} className="navbar__brand" aria-label="На главную">
-                    {/* <span className="navbar__logo" aria-hidden>☁️</span> */}
                     <span className="navbar__title">ломка
                         <Cloud className="navbar__icon" />
                     </span>
@@ -32,12 +33,17 @@ function NavBar({rightSlot1, rightSlot2, brandToMain }: Props) {
                     {user?.isLoggedIn ? (
                         <Link to="/" className="navbar__btn" onClick={() => {
                             logout();
-                            window.location.replace("/login");
+                            navigate("/login");
                         }}>
                             Выйти
                         </Link>
                     ) : (
-                        <Link to="/login" className="navbar__btn">Войти</Link>
+                        <a
+                            className="navbar__btn"
+                            onClick={() => navigate("/login", { state: { background: location } })}
+                        >
+                            Войти
+                        </a>
                     )}
                 </div>
             </div>
