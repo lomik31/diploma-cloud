@@ -5,7 +5,7 @@ import { login as loginFn, logout as logoutFn, type User } from "../api/auth";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User>({
-        isLoggedIn: !!sessionStorage.getItem("access_token") && !!localStorage.getItem("refresh_token")
+        isLoggedIn: !!localStorage.getItem("refresh_token")
     });
 
     const login = async (username: string, password: string) => {
