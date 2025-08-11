@@ -1,21 +1,5 @@
 #!/usr/bin/env bash
 
-# устанавливает docker, docker compose (зависит от системы)
-
-# спрашивает домен
-# если нет, считывает ip с машины
-# парсит и помещает в переменную
-
-
-# спрашивает, есть ли сертификаты
-# если да, завершает работу и просит положить их в certs/
-
-
-# создать продовый вольюм для базы данных prod_postgres_data и вольюм для файлов пользователей userfiles
-
-# запускает docker compose с переменной DOMAINS
-
-
 set -e
 
 ####################### ПОДГОТОВКА #######################
@@ -38,7 +22,7 @@ else
 fi
 set -e
 
-if [ "$NEED_DOCKER" = false ]; then
+if [ $NEED_DOCKER ]; then
     set +e
     docker compose version > /dev/null
     if [ $? -eq 0 ]; then
@@ -49,7 +33,7 @@ if [ "$NEED_DOCKER" = false ]; then
     set -e
 fi
 
-if [ "$NEED_DOCKER" = true ] || [ "$NEED_DOCKER_COMPOSE"= true ]; then
+if [ $NEED_DOCKER ] || [ $NEED_DOCKER_COMPOSE ]; then
     echo "Устанавливаем Docker..."
     curl -s https://get.docker.com | bash
     echo "Docker успешно установлен."
