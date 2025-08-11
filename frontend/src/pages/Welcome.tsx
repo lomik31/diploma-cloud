@@ -8,7 +8,7 @@ function Welcome() {
     const location = useLocation();
     return (
         <div className="welcome-page">
-            <NavBar />
+            <NavBar brandToMain/>
             <main className="welcome-content">
                 <section className="welcome-hero">
                     <h1 className="welcome-title">ломка — простое файловое хранилище</h1>
