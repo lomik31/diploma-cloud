@@ -4,6 +4,8 @@ from uuid import uuid4
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
+from users.validators import validate_username
+
 
 class UserManager(BaseUserManager):
     def create_user(
@@ -35,7 +37,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     id        = models.BigAutoField(primary_key=True)
     uuid      = models.UUIDField(default=uuid4, unique=True, editable=False)
-    username  = models.CharField(max_length=20, unique=True, blank=False)
+    username  = models.CharField(max_length=20, unique=True, blank=False, validators=[validate_username])
     fullname  = models.CharField(max_length=255, blank=False)
     email     = models.EmailField(max_length=320, unique=True, blank=False)
     is_staff  = models.BooleanField(default=False)
