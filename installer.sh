@@ -22,7 +22,7 @@ else
 fi
 set -e
 
-if [ $NEED_DOCKER ]; then
+if [ "$NEED_DOCKER" == true ]; then
     set +e
     docker compose version > /dev/null
     if [ $? -eq 0 ]; then
@@ -33,7 +33,7 @@ if [ $NEED_DOCKER ]; then
     set -e
 fi
 
-if [ $NEED_DOCKER ] || [ $NEED_DOCKER_COMPOSE ]; then
+if [ "$NEED_DOCKER" == true ] || [ "$NEED_DOCKER_COMPOSE" == true ]; then
     echo "Устанавливаем Docker..."
     curl -s https://get.docker.com | bash
     echo "Docker успешно установлен."
